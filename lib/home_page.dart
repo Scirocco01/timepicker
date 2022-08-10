@@ -43,6 +43,16 @@ class _HomeState extends State<Home> {
               const SizedBox(
                 height: 100,
               ),
+              MaterialButton(
+                color: Colors.blueGrey,
+                onPressed:(){
+                  Navigator.pushNamed(context,'/SquareClock');
+                },
+
+                child: const Text('SquareClock'),),
+              const SizedBox(
+                height: 100,
+              ),
 
 
 

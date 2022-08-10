@@ -3,6 +3,7 @@ import 'package:time_picker/box_clock/new_box_clock.dart';
 
 import '../custome_picker.dart';
 import '../home_page.dart';
+import '../third_try_clock/square_clock.dart';
 
 class RouteGenerator{
   static Route<dynamic> generatedRoute(RouteSettings settings){
@@ -13,6 +14,9 @@ class RouteGenerator{
 
       case '/Date_time_picker':
         return MaterialPageRoute(builder: (_) => const DateTimePicker());
+
+      case '/SquareClock':
+        return MaterialPageRoute(builder: (_) => const SquareClock());
 
       case '/new_box_clock':
         return MaterialPageRoute(builder:(_) => const BoxClock());

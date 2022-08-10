@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,9 +12,22 @@ class BoxClock extends StatefulWidget {
 }
 
 class _BoxClockState extends State<BoxClock> {
+  // @override
+  // void initState() {
+  //   Timer.periodic(Duration(seconds: 1), (timer) {
+  //     setState(() {});
+  //   });
+  //
+  //   super.initState();
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          Navigator.pop(context);
+        },
+      ),
       body: Center(
         child: Container(
           height: 300,
@@ -41,14 +55,20 @@ class _BoxClockState extends State<BoxClock> {
                           color: Colors.black,
                         ),
                       ),),
-                      Container(
-                        width:150,
-                        height:150,
-                        padding: const EdgeInsets.all(10.0),
-                        child:CustomPaint(
-                            painter: ClockDialPainter(),
-                          ),
+                      Listener(
+                        onPointerDown: (PointerDownEvent event){
+                          print("Global position x:${event.position.dx}, y:${event.position.dy}");
+                          print("Relative position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                        },
+                        child: Container(
+                          width:150,
+                          height:150,
+                          padding: const EdgeInsets.all(10.0),
+                          child:CustomPaint(
+                              painter: ClockDialPainter(),
+                            ),
 
+                        ),
                       ),
 
                     ],

@@ -35,7 +35,9 @@ class ClockDialPainter extends CustomPainter{
   @override
   void paint(Canvas canvas, Size size) {
     var centerx = size.width;
+
     var centery = size.height;
+    print(centery);
     var center = Offset(centerx, centery);
 
     var tickMarkLength;
@@ -43,18 +45,39 @@ class ClockDialPainter extends CustomPainter{
     final radius= size.width;
     canvas.save();
 
+
     var secHandBrush = Paint()
       ..color = Color(0xFFFF8A65)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 16
+      ..strokeWidth = 10
+
       ..strokeCap = StrokeCap.round;
-    var value = 12 ;
 
-    var secHandX = centerx + 130 * cos(value * 60 * pi / 180)  ;
-    var secHandY = centery + 130 * sin(value * 60 * pi / 180) ;
+    var value =1;
+    
+    
+
+    var secHandX = centerx + 130 * cos(value* 30 * pi / 180);
+    // = 260
+    var secHandY = centery + 130 * sin(value * 30 * pi / 180);
+    // = 130
     canvas.drawLine(center, Offset(secHandX, secHandY), secHandBrush);
-    print('the time is ${value + 3}');
+    canvas.save();
 
+
+
+
+
+
+    if(value ==12){
+      print('the time is 12');
+    }
+    else if(value >12){
+      print('the time is ${value - 12}');
+    }
+    else{
+      print('the time is ${value + 3}');
+    }
 
     canvas.translate(radius, radius);
     for (var i = 0; i< 60; i++ ) {
@@ -92,6 +115,7 @@ class ClockDialPainter extends CustomPainter{
       canvas.rotate(angle);
     }
 
+    canvas.restore();
     canvas.restore();
 
   }

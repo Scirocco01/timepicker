@@ -16,9 +16,9 @@ class _ClockViewState extends State<ClockView> {
   var yValue = 20.0;
   @override
   void initState() {
-    // Timer.periodic(Duration(seconds: 5), (timer) {
-    //   setState(() {});
-    // });
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {});
+    });
 
     super.initState();
   }
@@ -51,7 +51,7 @@ class _ClockViewState extends State<ClockView> {
                   print("Relative position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
                 },
                 child: Transform.rotate(
-                  angle: -pi / 2,
+                  angle:-1.5708,
                     child: CustomPaint(
                       painter: ClockPainter(xvalue: xvalue, yvalue: yValue),
               ),
