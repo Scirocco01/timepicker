@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:time_picker/clock_view.dart';
 
@@ -15,7 +17,9 @@ class _DateTimePickerState extends State<DateTimePicker> {
   Widget build(BuildContext context) {
     return Container(
       color: const Color(0xFF2D2F41),
-      child: ClockView(),
+      child: Transform.rotate(
+          angle: -pi/180,
+          child: ClockView()),
 
     );
   }

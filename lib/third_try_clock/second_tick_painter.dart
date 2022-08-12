@@ -1,8 +1,11 @@
+
+
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class ClockDialPainter extends CustomPainter{
+class SecTick extends CustomPainter{
   final clockText;
 
   final hourTickMarkLength= 10.0;
@@ -17,7 +20,7 @@ class ClockDialPainter extends CustomPainter{
 
 
 
-  ClockDialPainter({this.clockText= ClockText.roman})
+ SecTick({this.clockText= ClockText.roman})
       :tickPaint= Paint(),
         textPainter= TextPainter(
           textAlign: TextAlign.center,
@@ -34,9 +37,9 @@ class ClockDialPainter extends CustomPainter{
 
   @override
   void paint(Canvas canvas, Size size) {
-    var centerx = size.width;
+    var centerx = size.width/2;
 
-    var centery = size.height;
+    var centery = size.height/2;
     print(centery);
     var center = Offset(centerx, centery);
 
@@ -46,38 +49,8 @@ class ClockDialPainter extends CustomPainter{
     canvas.save();
 
 
-    var secHandBrush = Paint()
-      ..color = Color(0xFFFF8A65)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 10
-
-      ..strokeCap = StrokeCap.round;
-
-    var value =1;
-    
-    
-
-    var secHandX = centerx + 130 * cos(value* 30 * pi / 180);
-    // = 260
-    var secHandY = centery + 130 * sin(value * 30 * pi / 180);
-    // = 130
-    canvas.drawLine(center, Offset(secHandX, secHandY), secHandBrush);
-    canvas.save();
 
 
-
-
-
-
-    if(value ==12){
-      print('the time is 12');
-    }
-    else if(value >12){
-      print('the time is ${value - 12}');
-    }
-    else{
-      print('the time is ${value + 3}');
-    }
 
     canvas.translate(radius, radius);
     for (var i = 0; i< 60; i++ ) {
@@ -95,7 +68,7 @@ class ClockDialPainter extends CustomPainter{
         canvas.translate(0.0, -radius+20.0);
 
         textPainter.text= TextSpan(
-          text: '${i == 0 ? 12 : i~/5}',
+          text: '${i == 0 ? 60 : i~/1}',
 
           style: textStyle,
         );
@@ -116,7 +89,7 @@ class ClockDialPainter extends CustomPainter{
     }
 
     canvas.restore();
-    canvas.restore();
+
 
   }
 
@@ -129,4 +102,5 @@ class ClockDialPainter extends CustomPainter{
 enum ClockText{
   roman,
   arabic
+
 }

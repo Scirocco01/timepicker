@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:time_picker/third_try_clock/second_tick_painter.dart';
 
 import 'needle_pianter.dart';
 
@@ -25,18 +26,55 @@ class _SquareClockState extends State<SquareClock> {
   // }
   var lXvalue = 0.0;
   var lyvalue =0.0;
-  firstletter(double value){
-    var name = value.toString();
-    // if(value > 9){
-    //    return name.selectMultiple([1,3]).join(',');
-    // }
+  var hourVisible = true;
+  var secVisible = false;
 
-    return name[0];
+
+  var angle = 0.0;
+  var timerHour;
+  var timerSec;
+
+  var finalHourValue = 12;
+  var finalSecValue = 0;
+
+  radToDegHour(double value){
+    timerHour= value * 180/pi;
+    timerHour = timerHour/30;
+    timerHour.round();
+    if(timerHour>12){
+      timerHour.round() - 12;
+      setState((){
+        finalHourValue = timerHour.round();
+      });
+      return timerHour.round();
+    }
+    else {
+      setState((){
+        finalHourValue = timerHour.round();
+      });
+      return timerHour.round();
+    }
   }
-  secondletter(double value){
-    var name = value.toString();
-    return name[1];
+  
+  radToDegSec(double value){
+    timerSec =  value * 180/pi;
+
+    timerSec = timerSec/6;
+    if(timerSec.round()>59){
+       timerSec = timerSec.round()  - 60;
+      setState((){
+        finalSecValue = timerSec.round();
+      });
+        return timerSec.round();
+    }
+    else{
+      setState((){
+        finalSecValue = timerSec.round();
+      });
+      return timerSec.round();
+    }
   }
+
 
 
 
@@ -58,8 +96,8 @@ class _SquareClockState extends State<SquareClock> {
           crossAxisAlignment:CrossAxisAlignment.start,
 
           children: [
-            Text('Select Time '),
-            SizedBox(
+            const Text('Select Time '),
+            const SizedBox(
               height: 20,
             ),
 
@@ -68,32 +106,69 @@ class _SquareClockState extends State<SquareClock> {
               child: Center(
                 child: Row(
                   children:[
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(32),
-                      color: Colors.lightBlueAccent,
-                    ),
-                    child: Center(
+                  GestureDetector(
+                    onTap:(){
+                      setState((){
+                        hourVisible = true;
+                        secVisible =false;
+                        lXvalue  = finalHourValue.toDouble() ;
+                        print('lxvalue = ${lXvalue}');
+                        lyvalue = finalHourValue.toDouble() ;
+                        print('lyvalue = ${lyvalue}');
 
-                        child:
-
-                        Text('${firstletter(lXvalue)}',style: TextStyle(fontSize: 40),)),
-
-                  ),
-                    Text(':',style: TextStyle(fontSize: 50),),
-                    Container(
+                      });
+                    },
+                    child: Container(
                       height: 100,
                       width: 100,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(32),
                         color: Colors.lightBlueAccent,
                       ),
-                      child:   Center(child: Text('00',style: TextStyle(fontSize: 40),)),
+                      child: Center(
+
+                          child:
+                          hourVisible?
+                          Visibility(
+                              visible: hourVisible,
+                              child: Text('${radToDegHour(angle)}',style: TextStyle(fontSize: 40),)):
+                          Text('${finalHourValue}',style: TextStyle(fontSize: 40),)
 
                     ),
-                    SizedBox(width: 10,),
+
+                    ),
+                  ),
+                    Text(':',style: TextStyle(fontSize: 50),),
+                    GestureDetector(
+                      onTap:(){
+                      setState((){
+                        if(secVisible){secVisible = false;}
+                        else{secVisible = true;}
+                        hourVisible = false;
+                        lXvalue  = finalSecValue.toDouble() ;
+                        print('lxvalue = ${lXvalue}');
+                        lyvalue = finalSecValue.toDouble() ;
+                        print('lyvalue = ${lyvalue}');
+                      });
+                        print('onvisible taop');
+                      },
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(32),
+                          color: Colors.lightBlueAccent,
+                        ),
+                        child:
+                        secVisible?
+                        Visibility(
+                          visible: secVisible,
+                            child: Center(child: Text('${radToDegSec(angle)}',style: TextStyle(fontSize: 40),))
+                        ): Center(child: Text('${finalSecValue}',style: TextStyle(fontSize: 40)))
+
+                      ),
+                    ),
+                    const SizedBox(width: 10,),
                     Container(
                       height: 140,
                       width: 80,
@@ -129,212 +204,219 @@ class _SquareClockState extends State<SquareClock> {
 
                 child: Stack(
                   children: [
-                    Listener(
+                  Visibility(
+                      visible:hourVisible, 
+                      child: Stack(
+                    children: [
+                      Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue = 0;
+                              lyvalue = 0;
+                            });
+
+                          },
+                          child: const Dials(
+                            txt: '12',
+                            x: 0.0,
+                            y: -0.84,
+                          )),
+
+                      Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue =1;
+                              lyvalue = 1;
+                            });
+
+                          },
+                          child: const Dials(
+                            txt: '1',
+                            x: 0.38,
+                            y: -0.74,
+                          )),
+
+
+                      Listener(
+
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue = 2;
+                              lyvalue = 2;
+                            });
+                            print(
+                                "Global 2 position x:${event.position.dx}, y:${event.position.dy}");
+                            print(
+                                "Relative 2 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                          },
+                          child:const Dials(
+                            txt: '2',
+                            x: 0.671,
+                            y: -0.45,
+                          )),
+
+
+                      Listener(
                         onPointerDown: (PointerDownEvent event) {
                           setState(() {
-                            lXvalue = 0;
-                            lyvalue = 0;
+                            lXvalue =3;
+                            lyvalue = 3;
                           });
-
+                          print(
+                              "Global 3 position x:${event.position.dx}, y:${event.position.dy}");
+                          print(
+                              "Relative 3 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
                         },
                         child: const Dials(
-                          txt: '12',
-                          x: 0.0,
-                          y: -0.84,
-                        )),
+                          txt: '3',
+                          x: 0.78,
+                          y: -0.0,
+                        ),
+                      ),
 
-                    Listener(
+
+                      Listener(
                         onPointerDown: (PointerDownEvent event) {
                           setState(() {
-                            lXvalue =1;
-                            lyvalue = 1;
+                            lXvalue =4;
+                            lyvalue = 4;
                           });
-
+                          print(
+                              "Global 3 position x:${event.position.dx}, y:${event.position.dy}");
+                          print(
+                              "Relative 3 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
                         },
-                        child: const Dials(
-                          txt: '1',
+                        child:const Dials(
+                          txt: '4',
+                          x: 0.671,
+                          y: 0.48,
+                        ),),
+
+
+                      Listener(
+                        onPointerDown: (PointerDownEvent event) {
+                          setState(() {
+                            lXvalue =5;
+                            lyvalue = 5;
+                          });
+                          print(
+                              "Global 5 position x:${event.position.dx}, y:${event.position.dy}");
+                          print(
+                              "Relative 5 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                        },
+                        child:const Dials(
+                          txt: '5',
                           x: 0.38,
-                          y: -0.74,
-                        )),
+                          y: 0.74,
+                        ),),
 
 
-                 Listener(
-
-                  onPointerDown: (PointerDownEvent event) {
-                     setState(() {
-                       lXvalue = 2;
-                       lyvalue = 2;
-                         });
-                         print(
-                           "Global 2 position x:${event.position.dx}, y:${event.position.dy}");
-                       print(
-                            "Relative 2 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                    },
-                      child:const Dials(
-                      txt: '2',
-                      x: 0.671,
-                      y: -0.45,
-                       )),
-
-
-                   Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =3;
-                    lyvalue = 3;
-                  });
-                  print(
-                      "Global 3 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 3 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child: const Dials(
-                      txt: '3',
-                      x: 0.78,
-                      y: -0.0,
-                    ),
-              ),
+                      Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue =6;
+                              lyvalue = 6;
+                            });
+                            print(
+                                "Global 6 position x:${event.position.dx}, y:${event.position.dy}");
+                            print(
+                                "Relative 6 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                          },
+                          child: const Dials(
+                            txt: '6',
+                            x: 0.0,
+                            y: 0.84,
+                          ) ),
 
 
-              Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =4;
-                    lyvalue = 4;
-                  });
-                  print(
-                      "Global 3 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 3 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child:const Dials(
-                      txt: '4',
-                      x: 0.671,
-                      y: 0.48,
-                    ),),
+                      Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue =7;
+                              lyvalue = 7;
+                            });
+                            print(
+                                "Global 7 position x:${event.position.dx}, y:${event.position.dy}");
+                            print(
+                                "Relative 7 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                          },
+                          child:const Dials(
+                            txt: '7',
+                            x: -0.38,
+                            y: 0.74,
+                          )),
+
+                      Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue =8;
+                              lyvalue = 8;
+                            });
+                            print(
+                                "Global 8 position x:${event.position.dx}, y:${event.position.dy}");
+                            print(
+                                "Relative 8 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                          },
+                          child:const Dials(
+                            txt: '8',
+                            x: -0.671,
+                            y: 0.48,
+                          ) ),
+
+                      Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue =9;
+                              lyvalue = 9;
+                              angle =  6.283;
+                            });
+                            print(
+                                "Global 9 position x:${event.position.dx}, y:${event.position.dy}");
+                            print(
+                                "Relative 9 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                          },
+                          child:const Dials(
+                            txt: '9',
+                            x: -0.78,
+                            y: -0.0,
+                          ) ),
 
 
-              Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =5;
-                    lyvalue = 5;
-                  });
-                  print(
-                      "Global 5 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 5 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child:const Dials(
-                      txt: '5',
-                      x: 0.38,
-                      y: 0.74,
-                    ),),
+                      Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue =10;
+                              lyvalue = 10;
+                            });
+                            print(
+                                "Global 10 position x:${event.position.dx}, y:${event.position.dy}");
+                            print(
+                                "Relative 10 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                          },
+                          child:const Dials(
+                            txt: '10',
+                            x: -0.671,
+                            y: -0.48,
+                          ) ),
 
-
-              Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =6;
-                    lyvalue = 6;
-                  });
-                  print(
-                      "Global 6 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 6 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child: const Dials(
-                      txt: '6',
-                      x: 0.0,
-                      y: 0.84,
-                ) ),
-
-
-              Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =7;
-                    lyvalue = 7;
-                  });
-                  print(
-                      "Global 7 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 7 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child:const Dials(
-                      txt: '7',
-                      x: -0.38,
-                      y: 0.74,
-                )),
-
-              Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =8;
-                    lyvalue = 8;
-                  });
-                  print(
-                      "Global 8 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 8 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child:const Dials(
-                      txt: '8',
-                      x: -0.671,
-                      y: 0.48,
-                ) ),
-
-              Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =9;
-                    lyvalue = 9;
-                  });
-                  print(
-                      "Global 9 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 9 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child:const Dials(
-                      txt: '9',
-                      x: -0.78,
-                      y: -0.0,
-                ) ),
-
-
-              Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =10;
-                    lyvalue = 10;
-                  });
-                  print(
-                      "Global 10 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 10 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child:const Dials(
-                      txt: '10',
-                      x: -0.671,
-                      y: -0.48,
-                ) ),
-
-              Listener(
-                onPointerDown: (PointerDownEvent event) {
-                  setState(() {
-                    lXvalue =11;
-                    lyvalue = 11;
-                  });
-                  print(
-                      "Global 11 position x:${event.position.dx}, y:${event.position.dy}");
-                  print(
-                      "Relative 11 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
-                },
-                child: const Dials(
-                      txt: '11',
-                      x: -0.38,
-                      y: -0.74,
-                )),
+                      Listener(
+                          onPointerDown: (PointerDownEvent event) {
+                            setState(() {
+                              lXvalue =11;
+                              lyvalue = 11;
+                            });
+                            print(
+                                "Global 11 position x:${event.position.dx}, y:${event.position.dy}");
+                            print(
+                                "Relative 11 position: x:${event.localPosition.dx}, y:${event.localPosition.dy}");
+                          },
+                          child: const Dials(
+                            txt: '11',
+                            x: -0.38,
+                            y: -0.74,
+                          )),
+                    ],
+                  )),
                     Center(
                         child: Container(
                             height: 280,
@@ -344,17 +426,43 @@ class _SquareClockState extends State<SquareClock> {
                               borderRadius: BorderRadius.circular(150),
                             ),
                             child: Stack(children: [
+
+                                 Visibility(
+                                   visible: secVisible,
+                                   child: Container(
+                                    height: 150,
+                                    width: 150,
+                                    padding: EdgeInsets.all(10.0),
+                                    child: CustomPaint(
+                                    painter: SecTick(),
+                                    ),
+
+                                ),
+                                 ),
+
+
                               Transform.rotate(
-                                angle:  - 1.5708,
-                                child: Container(
-                                  width: 300,
-                                  height: 300,
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: CustomPaint(
-                                    painter: Needle(xvalue: lXvalue, yvalue: lyvalue),
+                                origin:  Offset(0, 0),
+                                angle:  - 1.5708 + angle,
+                               child: GestureDetector(
+                                  onPanUpdate: (dragUpdateDetails) {
+                                     setState((){
+                                       angle = angle + 0.01743;
+                                       //2mints
+                                       print('angle = $angle');
+                                     }); //bloc event to update the position of draggable object as per your convenience
+                                  },
+                                    child: Container(
+                                      width: 300,
+                                       height: 300,
+
+                                       padding: const EdgeInsets.all(10.0),
+                                       child: CustomPaint(
+                                          painter: Needle(xvalue: lXvalue, yvalue: lyvalue),
                                   ),
                                 ),
-                              ),
+                              ),),
+
                               Center(
                                 child: Container(
                                   height: 50,
@@ -365,6 +473,7 @@ class _SquareClockState extends State<SquareClock> {
                                   ),
                                 ),
                               ),
+
                             ]))),
                     // Center Circle
                   ],
@@ -375,8 +484,7 @@ class _SquareClockState extends State<SquareClock> {
         ),
       ),
     );
-  }
-}
+  }}
 
 class Dials extends StatefulWidget {
   const Dials({
@@ -439,7 +547,9 @@ class Needle extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var centerx = size.width / 2;
     var centery = size.height / 2;
+    print('center x = ${centerx}, center y = ${centery}');
     var center = Offset(centerx, centery);
+    print(center);
 
     var secHandBrush = Paint()
       ..color = Color(0xFFFF8A65)
@@ -451,7 +561,7 @@ class Needle extends CustomPainter {
     var secHandY = centerx + 130 * sin(yvalue * 30 * pi / 180);
 
     canvas.drawLine(center, Offset(secHandX, secHandY), secHandBrush);
-    print('this is sec x value $secHandX , this is sec y value $secHandY');
+    print('this is sec x value $xvalue , this is sec y value $yvalue');
     canvas.rotate(1.99);
   }
 

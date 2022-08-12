@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_picker/Animation/animated.dart';
 import 'package:time_picker/box_clock/new_box_clock.dart';
 
 import '../custome_picker.dart';
@@ -14,6 +15,8 @@ class RouteGenerator{
 
       case '/Date_time_picker':
         return MaterialPageRoute(builder: (_) => const DateTimePicker());
+      case '/animation':
+        return MaterialPageRoute(builder: (_) => SampleAnimation());
 
       case '/SquareClock':
         return MaterialPageRoute(builder: (_) => const SquareClock());

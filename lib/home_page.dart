@@ -30,6 +30,13 @@ class _HomeState extends State<Home> {
                 },
 
                 child: const Text('Custom'),),
+              MaterialButton(
+                color: Colors.blueGrey,
+                onPressed:(){
+                  Navigator.pushNamed(context,'/animation');
+                },
+
+                child: const Text('Animation'),),
               const SizedBox(
                 height: 100,
               ),
